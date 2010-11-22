@@ -6,6 +6,7 @@
   <modules>
     <module>log-handler</module>
     <module>log-handler-it</module>
+    <module>log-handler-example</module>
   </modules>
 
   <parent>
@@ -65,12 +66,17 @@
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-ipojo-plugin</artifactId>
           <version>${maven-ipojo-plugin.version}</version>
-          <goals>
-            <goal>ipojo-bundle</goal>
-          </goals>
-          <configuration>
-            <metadata>${basedir}/target/classes/META-INF/metadata.xml</metadata>
-          </configuration>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>ipojo-bundle</goal>
+              </goals>
+              <configuration>
+                <metadata>src/main/resources/META-INF/metadata.xml</metadata>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
