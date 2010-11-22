@@ -11,7 +11,7 @@ import org.osgi.util.tracker.ServiceTracker;
  * Time: 21:00
  * To change this template use File | Settings | File Templates.
  */
-public class OSGiSupportTestCase {
+public class OSGiTestSupport {
 
     @Inject
     protected BundleContext bundleContext;

@@ -2,17 +2,14 @@ package org.ow2.ipojo.toolkit.log;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.ops4j.pax.exam.Inject;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.ow2.chameleon.testing.tinybundles.ipojo.IPOJOBuilder;
 import org.ow2.ipojo.toolkit.log.api.ILogTestService;
-import org.ow2.ipojo.toolkit.log.component.TestLoggerComponent;
-import org.ow2.ipojo.toolkit.log.utils.OSGiSupportTestCase;
+import org.ow2.ipojo.toolkit.log.component.LoggerComponent;
+import org.ow2.ipojo.toolkit.log.utils.OSGiTestSupport;
 
 import java.io.File;
 
@@ -32,7 +29,7 @@ import static org.junit.Assert.*;
  * To change this template use File | Settings | File Templates.
  */
 @RunWith( JUnit4TestRunner.class )
-public class LogPointHandlerTestCase extends OSGiSupportTestCase {
+public class LogPointHandlerTestCase extends OSGiTestSupport {
 
     @Configuration
     public static Option[] configure() {
@@ -40,7 +37,7 @@ public class LogPointHandlerTestCase extends OSGiSupportTestCase {
         return options(
                 mavenBundle("org.apache.felix", "org.apache.felix.ipojo").versionAsInProject(),
                 mavenBundle("org.ow2.ipojo.toolkit", "log-handler").versionAsInProject(),
-                felix().version("2.0.0"),
+                felix(),
                 // API bundle
                 provision(newBundle()
                         .add(ILogTestService.class)
@@ -49,9 +46,9 @@ public class LogPointHandlerTestCase extends OSGiSupportTestCase {
                         .build(withBnd())),
                 // Component bundle
                 provision(newBundle()
-                        .add(TestLoggerComponent.class)
-                        .set(Constants.IMPORT_PACKAGE,
-                                ILogTestService.class.getPackage().getName())
+                        .add(LoggerComponent.class)
+//                        .set(Constants.IMPORT_PACKAGE,
+//                                ILogTestService.class.getPackage().getName())
                         .build(IPOJOBuilder.withiPOJO(metadata))
                 )
         );
@@ -64,7 +61,7 @@ public class LogPointHandlerTestCase extends OSGiSupportTestCase {
      */
     @Test
     public void testLoggerInjection() {
-        ILogTestService service = getOsgiService(ILogTestService.class, null, 1000);
+        ILogTestService service = getOsgiService(ILogTestService.class, null, 5000);
         assertThat(service.isLoggerInjected(), is(true));
     }
 }
