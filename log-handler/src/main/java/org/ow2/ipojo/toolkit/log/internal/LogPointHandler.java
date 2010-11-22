@@ -20,7 +20,7 @@ import java.util.Dictionary;
 public class LogPointHandler extends PrimitiveHandler {
     @Override
     public void configure(Element metadata, Dictionary configuration) throws ConfigurationException {
-        Element[] logPointElements = metadata.getElements("logpoint");
+        Element[] logPointElements = metadata.getElements("logpoint", "org.ow2.ipojo.toolkit.log");
         if (logPointElements.length != 1) {
             throw new ConfigurationException("Cannot have more than 1 <logpoint> element");
         }
@@ -46,12 +46,7 @@ public class LogPointHandler extends PrimitiveHandler {
     }
 
     private String getFieldName(Element logPointElement) throws ConfigurationException {
-        Element[] fieldElements = logPointElement.getElements("field");
-        if (fieldElements.length != 1) {
-            throw new ConfigurationException("Cannot have more than 1 <field> element");
-        }
-        Element fieldElement = fieldElements[0];
-        return fieldElement.getAttribute("name");
+        return logPointElement.getAttribute("field");
 
     }
 
