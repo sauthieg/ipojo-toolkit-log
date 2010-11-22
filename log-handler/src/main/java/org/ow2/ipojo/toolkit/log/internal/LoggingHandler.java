@@ -20,9 +20,9 @@ import java.util.Dictionary;
 public class LoggingHandler extends PrimitiveHandler {
     @Override
     public void configure(Element metadata, Dictionary configuration) throws ConfigurationException {
-        Element[] logPointElements = metadata.getElements("logpoint", "org.ow2.ipojo.toolkit.log");
+        Element[] logPointElements = metadata.getElements("logging", "org.ow2.ipojo.toolkit.log");
         if (logPointElements.length != 1) {
-            throw new ConfigurationException("Cannot have more than 1 <logpoint> element");
+            throw new ConfigurationException("Cannot have more than 1 <logging> element");
         }
 
         Element logPointElement = logPointElements[0];
