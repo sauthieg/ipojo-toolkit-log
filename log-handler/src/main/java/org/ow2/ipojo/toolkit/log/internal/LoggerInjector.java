@@ -12,10 +12,10 @@ import java.util.logging.Logger;
  * To change this template use File | Settings | File Templates.
  */
 public class LoggerInjector implements FieldInterceptor {
-    private LogPointHandler handler;
+    private LoggingHandler handler;
     private String name;
 
-    public LoggerInjector(LogPointHandler handler, String name) {
+    public LoggerInjector(LoggingHandler handler, String name) {
         this.handler = handler;
         this.name = name;
     }

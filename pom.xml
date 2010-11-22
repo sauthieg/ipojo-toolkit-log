@@ -5,8 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
   <modules>
     <module>log-handler</module>
-    <module>log-handler-it</module>
     <module>log-handler-example</module>
+    <module>log-handler-it</module>
   </modules>
 
   <parent>

@@ -4,7 +4,7 @@ import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Invalidate;
 import org.apache.felix.ipojo.annotations.Validate;
-import org.ow2.ipojo.toolkit.log.LogPoint;
+import org.ow2.ipojo.toolkit.log.Logging;
 
 import java.util.logging.Logger;
 
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @Instantiate
 public class LoggableComponent {
 
-    @LogPoint
+    @Logging
     public Logger logger;
 
     @Validate

@@ -17,7 +17,7 @@ import java.util.Dictionary;
  */
 @Handler(name = "logpoint",
          namespace = "org.ow2.ipojo.toolkit.log")
-public class LogPointHandler extends PrimitiveHandler {
+public class LoggingHandler extends PrimitiveHandler {
     @Override
     public void configure(Element metadata, Dictionary configuration) throws ConfigurationException {
         Element[] logPointElements = metadata.getElements("logpoint", "org.ow2.ipojo.toolkit.log");
