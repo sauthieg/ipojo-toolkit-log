@@ -54,20 +54,20 @@ public class LoggingHandler extends PrimitiveHandler {
 
     /**
      * Get the user specified (if any) logger's name.
-     * @param logPointElement the supporting Element structure
+     * @param loggingElement the supporting Element structure
      * @return value of the 'value' attribute (or null)
      */
-    private String getLoggerName(Element logPointElement) {
-        return logPointElement.getAttribute("value");
+    private String getLoggerName(Element loggingElement) {
+        return loggingElement.getAttribute("value");
     }
 
     /**
      * Get the name of the field that will be injected.
-     * @param logPointElement the supporting Element structure
+     * @param loggingElement the supporting Element structure
      * @return value of the 'field' attribute
      */
-    private String getFieldName(Element logPointElement) throws ConfigurationException {
-        return logPointElement.getAttribute("field");
+    private String getFieldName(Element loggingElement) throws ConfigurationException {
+        return loggingElement.getAttribute("field");
 
     }
 
