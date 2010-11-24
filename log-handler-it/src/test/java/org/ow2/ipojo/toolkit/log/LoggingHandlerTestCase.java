@@ -46,12 +46,10 @@ public class LoggingHandlerTestCase extends OSGiTestSupport {
     }
 
 
-    /**
-     * You will get a list of bundles installed by default
-     * plus your testcase, wrapped into a bundle called pax-exam-probe
-     */
     @Test
     public void testLoggerInjection() throws Exception {
+
+        // Get the factory and try to crete an instance.
         Factory factory = getOsgiService(Factory.class, "(factory.name=" + LoggerComponent.class.getName() + ")", 200);
         ComponentInstance instance = factory.createComponentInstance(null);
 
