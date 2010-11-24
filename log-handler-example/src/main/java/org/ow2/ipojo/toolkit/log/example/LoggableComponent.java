@@ -20,15 +20,20 @@ import java.util.logging.Logger;
 public class LoggableComponent {
 
     @Logging
-    public Logger logger;
+    public Logger logger1;
+
+    @Logging("another.logger.name")
+    public Logger logger2;
 
     @Validate
     public void start() {
-        logger.info(LoggableComponent.class.getSimpleName() + " started.");
+        logger1.info(LoggableComponent.class.getSimpleName() + "[" + logger1.getName() + "] started.");
+        logger2.info(LoggableComponent.class.getSimpleName() + "[" + logger2.getName() + "] started.");
     }
 
     @Invalidate
     public void stop() {
-        logger.info(LoggableComponent.class.getSimpleName() + " stopped.");
+        logger1.info(LoggableComponent.class.getSimpleName() + "[" + logger1.getName() + "] stopped.");
+        logger2.info(LoggableComponent.class.getSimpleName() + "[" + logger2.getName() + "] stopped.");
     }
 }
