@@ -9,23 +9,33 @@ import org.apache.felix.ipojo.parser.FieldMetadata;
 import java.util.Dictionary;
 
 /**
- * Created by IntelliJ IDEA.
- * User: guillaume
- * Date: 15/11/10
- * Time: 21:41
- * To change this template use File | Settings | File Templates.
+ * This handler is responsible to inject Loggers into the component.
+ * Using this handler free the component developer from the usual static factory pattern.
+ *
+ * @author Guillaume Sauthier
  */
 @Handler(name = "logging",
          namespace = "org.ow2.ipojo.toolkit.log")
 public class LoggingHandler extends PrimitiveHandler {
 
+    /**
+     * Handler's name.
+     */
     private static final String HANDLER_NAME = "logging";
+
+    /**
+     * Handler's namespace.
+     */
     private static final String NAMESPACE = "org.ow2.ipojo.toolkit.log";
 
     @Override
-    public void configure(Element metadata, Dictionary configuration) throws ConfigurationException {
+    public void configure(final Element metadata,
+                          final Dictionary configuration) throws ConfigurationException {
+
+        // Get the logging handler declaration(s)
         Element[] loggingElements = metadata.getElements(HANDLER_NAME, NAMESPACE);
 
+        // Iterate over the handler declaration(s)
         for (Element loggingElement : loggingElements) {
 
             // Traverse the logging element
@@ -67,6 +77,7 @@ public class LoggingHandler extends PrimitiveHandler {
      * Get the name of the field that will be injected.
      * @param loggingElement the supporting Element structure
      * @return value of the 'field' attribute
+     * @throws ConfigurationException when field is unknown
      */
     private String getFieldName(Element loggingElement) throws ConfigurationException {
         return loggingElement.getAttribute("field");
