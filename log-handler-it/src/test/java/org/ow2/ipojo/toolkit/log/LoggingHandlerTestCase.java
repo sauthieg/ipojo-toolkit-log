@@ -1,13 +1,13 @@
 package org.ow2.ipojo.toolkit.log;
 
+import org.apache.felix.ipojo.ComponentInstance;
+import org.apache.felix.ipojo.Factory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.osgi.framework.Constants;
 import org.ow2.chameleon.testing.tinybundles.ipojo.IPOJOBuilder;
-import org.ow2.ipojo.toolkit.log.api.ILogTestService;
 import org.ow2.ipojo.toolkit.log.component.LoggerComponent;
 import org.ow2.ipojo.toolkit.log.utils.OSGiTestSupport;
 
@@ -17,7 +17,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.ops4j.pax.exam.CoreOptions.*;
 import static org.ops4j.pax.swissbox.tinybundles.core.TinyBundles.newBundle;
-import static org.ops4j.pax.swissbox.tinybundles.core.TinyBundles.withBnd;
 
 
 /**
@@ -38,22 +37,9 @@ public class LoggingHandlerTestCase extends OSGiTestSupport {
                 mavenBundle("org.ow2.ipojo.toolkit", "log-handler").versionAsInProject(),
                 felix(),
 
-                // TODO The following do not work because of the API that is not shared between the probe and the component.
-                // Unfortunately, I didn't see any way of forcing an Import-Package on the probe bundle
-                // A possible solution is to simply extract the API in another module
-                // Or change the test logic to remove interface usage (instance creation did work)
-
-                // API bundle
-                provision(newBundle()
-                        .add(ILogTestService.class)
-                        .set(Constants.EXPORT_PACKAGE,
-                                ILogTestService.class.getPackage().getName())
-                        .build(withBnd())),
                 // Component bundle
                 provision(newBundle()
                         .add(LoggerComponent.class)
-//                        .set(Constants.IMPORT_PACKAGE,
-//                                ILogTestService.class.getPackage().getName())
                         .build(IPOJOBuilder.withiPOJO(metadata))
                 )
         );
@@ -65,8 +51,11 @@ public class LoggingHandlerTestCase extends OSGiTestSupport {
      * plus your testcase, wrapped into a bundle called pax-exam-probe
      */
     @Test
-    public void testLoggerInjection() {
-        ILogTestService service = getOsgiService(ILogTestService.class, null, 5000);
-        assertThat(service.isLoggerInjected(), is(true));
+    public void testLoggerInjection() throws Exception {
+        Factory factory = getOsgiService(Factory.class, "(factory.name=" + LoggerComponent.class.getName() + ")", 200);
+        ComponentInstance instance = factory.createComponentInstance(null);
+
+        // Instance should be valid ...
+        assertThat(instance.getState(), is(ComponentInstance.VALID));
     }
 }
