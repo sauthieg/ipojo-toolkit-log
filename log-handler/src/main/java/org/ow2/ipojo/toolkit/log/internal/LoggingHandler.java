@@ -34,7 +34,7 @@ public class LoggingHandler extends PrimitiveHandler {
 
             // By default, Logger's name is the supporting fully qualified class name
             if (name == null) {
-                name = getInstanceManager().getClazz().getPackage().getName();
+                name = getInstanceManager().getClazz().getName();
             }
 
             // Setup the injections point

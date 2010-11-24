@@ -18,7 +18,7 @@ public @interface Logging {
 
     /**
      * Name of the logger (optional).
-     * Defaults to the supporting component's fully qualified package name.
+     * Defaults to the supporting component's fully qualified class name.
      */
     String value() default "";
 }
