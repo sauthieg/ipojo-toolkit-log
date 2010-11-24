@@ -15,19 +15,19 @@ import java.util.Dictionary;
  * Time: 21:41
  * To change this template use File | Settings | File Templates.
  */
-@Handler(name = "logpoint",
+@Handler(name = "logging",
          namespace = "org.ow2.ipojo.toolkit.log")
 public class LoggingHandler extends PrimitiveHandler {
     @Override
     public void configure(Element metadata, Dictionary configuration) throws ConfigurationException {
-        Element[] logPointElements = metadata.getElements("logging", "org.ow2.ipojo.toolkit.log");
-        if (logPointElements.length != 1) {
+        Element[] loggingElements = metadata.getElements("logging", "org.ow2.ipojo.toolkit.log");
+        if (loggingElements.length != 1) {
             throw new ConfigurationException("Cannot have more than 1 <logging> element");
         }
 
-        Element logPointElement = logPointElements[0];
-        String fieldName = getFieldName(logPointElement);
-        String name = getLoggerName(logPointElement);
+        Element loggingElement = loggingElements[0];
+        String fieldName = getFieldName(loggingElement);
+        String name = getLoggerName(loggingElement);
 
         if (name == null) {
             name = getInstanceManager().getClazz().getPackage().getName();
