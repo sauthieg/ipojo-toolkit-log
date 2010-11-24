@@ -18,33 +18,54 @@ import java.util.Dictionary;
 @Handler(name = "logging",
          namespace = "org.ow2.ipojo.toolkit.log")
 public class LoggingHandler extends PrimitiveHandler {
+
     @Override
     public void configure(Element metadata, Dictionary configuration) throws ConfigurationException {
         Element[] loggingElements = metadata.getElements("logging", "org.ow2.ipojo.toolkit.log");
+
+        // TODO Support more than 1 handler declaration (aka multiple Logger injections)
         if (loggingElements.length != 1) {
             throw new ConfigurationException("Cannot have more than 1 <logging> element");
         }
 
+        // Traverse the logging element
         Element loggingElement = loggingElements[0];
         String fieldName = getFieldName(loggingElement);
         String name = getLoggerName(loggingElement);
 
+        // By default, Logger's name is the supporting fully qualified class name
         if (name == null) {
             name = getInstanceManager().getClazz().getPackage().getName();
         }
 
+        // Setup the injections point
         FieldMetadata field = getFieldMetadata(fieldName);
         getInstanceManager().register(field, new LoggerInjector(this, name));
     }
 
+    /**
+     * Find the matching field Metadata from the field name.
+     * @param fieldName name of the field to find
+     * @return FieldMetadata
+     */
     private FieldMetadata getFieldMetadata(String fieldName) {
         return getPojoMetadata().getField(fieldName);
     }
 
+    /**
+     * Get the user specified (if any) logger's name.
+     * @param logPointElement the supporting Element structure
+     * @return value of the 'value' attribute (or null)
+     */
     private String getLoggerName(Element logPointElement) {
         return logPointElement.getAttribute("value");
     }
 
+    /**
+     * Get the name of the field that will be injected.
+     * @param logPointElement the supporting Element structure
+     * @return value of the 'field' attribute
+     */
     private String getFieldName(Element logPointElement) throws ConfigurationException {
         return logPointElement.getAttribute("field");
 
@@ -52,11 +73,11 @@ public class LoggingHandler extends PrimitiveHandler {
 
     @Override
     public void stop() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // Nothing to do
     }
 
     @Override
     public void start() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // Nothing to do
     }
 }
