@@ -37,6 +37,12 @@ public class LoggingHandlerTestCase extends OSGiTestSupport {
                 mavenBundle("org.apache.felix", "org.apache.felix.ipojo").versionAsInProject(),
                 mavenBundle("org.ow2.ipojo.toolkit", "log-handler").versionAsInProject(),
                 felix(),
+
+                // TODO The following do not work because of the API that is not shared between the probe and the component.
+                // Unfortunately, I didn't see any way of forcing an Import-Package on the probe bundle
+                // A possible solution is to simply extract the API in another module
+                // Or change the test logic to remove interface usage (instance creation did work)
+
                 // API bundle
                 provision(newBundle()
                         .add(ILogTestService.class)
