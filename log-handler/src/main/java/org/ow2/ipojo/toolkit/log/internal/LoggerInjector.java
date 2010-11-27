@@ -1,7 +1,10 @@
 package org.ow2.ipojo.toolkit.log.internal;
 
 import org.apache.felix.ipojo.FieldInterceptor;
+import org.osgi.framework.ServiceReference;
+import org.ow2.ipojo.toolkit.log.spi.LoggingModule;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -14,10 +17,14 @@ import java.util.logging.Logger;
 public class LoggerInjector implements FieldInterceptor {
     private LoggingHandler handler;
     private String name;
+    private Class<?> type;
 
-    public LoggerInjector(LoggingHandler handler, String name) {
+    private LoggerReference reference = new InitialLoggerReference();
+
+    public LoggerInjector(LoggingHandler handler, String name, Class<?> type) {
         this.handler = handler;
         this.name = name;
+        this.type = type;
     }
 
     public void onSet(Object pojo, String fieldName, Object value) {
@@ -25,7 +32,25 @@ public class LoggerInjector implements FieldInterceptor {
     }
 
     public Object onGet(Object pojo, String fieldName, Object value) {
-        // TODO Should return a different instance given the expected type (JUL, JCL, ...)
-        return Logger.getLogger(name);
+
+        if (!reference.isUsable()) {
+            // Reference became invalid or it is the first invocation
+            reference = handler.findLogger(type, name);
+        }
+
+        return reference.getLogger();
     }
+
+    private class InitialLoggerReference extends LoggerReference {
+
+        public InitialLoggerReference() {
+            super(null, null);
+        }
+
+        @Override
+        public boolean isUsable() {
+            return false;
+        }
+    }
+
 }

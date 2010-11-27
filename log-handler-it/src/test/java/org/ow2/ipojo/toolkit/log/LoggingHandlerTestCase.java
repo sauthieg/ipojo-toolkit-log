@@ -60,6 +60,9 @@ public class LoggingHandlerTestCase {
     public void setup() {
         osgi = new OSGiHelper(context);
         ipojo = new IPOJOHelper(context);
+
+        // Prepare a JUL module instance
+        ipojo.createComponentInstance("org.ow2.ipojo.toolkit.log.internal.jul.JavaUtilLoggingModule");
     }
 
     @After

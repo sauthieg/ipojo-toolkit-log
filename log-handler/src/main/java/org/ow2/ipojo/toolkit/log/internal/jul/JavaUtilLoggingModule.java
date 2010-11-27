@@ -2,6 +2,7 @@ package org.ow2.ipojo.toolkit.log.internal.jul;
 
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Provides;
+import org.apache.felix.ipojo.annotations.ServiceProperty;
 import org.ow2.ipojo.toolkit.log.spi.LoggingModule;
 
 import java.util.logging.Logger;
@@ -16,6 +17,9 @@ import java.util.logging.Logger;
 @Component
 @Provides
 public class JavaUtilLoggingModule implements LoggingModule {
+
+    @ServiceProperty(mandatory = true, value = ".*")
+    private String pattern;
 
     public <T> T getLogger(Class<T> expected, String name) {
 

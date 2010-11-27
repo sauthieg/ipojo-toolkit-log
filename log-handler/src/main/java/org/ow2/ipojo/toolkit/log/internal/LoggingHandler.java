@@ -2,11 +2,18 @@ package org.ow2.ipojo.toolkit.log.internal;
 
 import org.apache.felix.ipojo.ConfigurationException;
 import org.apache.felix.ipojo.PrimitiveHandler;
+import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Handler;
+import org.apache.felix.ipojo.annotations.Unbind;
 import org.apache.felix.ipojo.metadata.Element;
 import org.apache.felix.ipojo.parser.FieldMetadata;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.ServiceReference;
+import org.ow2.ipojo.toolkit.log.spi.LoggingModule;
 
-import java.util.Dictionary;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This handler is responsible to inject Loggers into the component.
@@ -27,6 +34,11 @@ public class LoggingHandler extends PrimitiveHandler {
      * Handler's namespace.
      */
     private static final String NAMESPACE = "org.ow2.ipojo.toolkit.log";
+
+    /**
+     * All registered modules.
+     */
+    private Map<ServiceReference, LoggingModule> modules = new HashMap<ServiceReference, LoggingModule>();
 
     @Override
     public void configure(final Element metadata,
@@ -49,7 +61,13 @@ public class LoggingHandler extends PrimitiveHandler {
 
             // Setup the injections point
             FieldMetadata field = getFieldMetadata(fieldName);
-            getInstanceManager().register(field, new LoggerInjector(this, name));
+            Class<?> type = null;
+            try {
+                type = getFactory().loadClass(field.getFieldType());
+            } catch (ClassNotFoundException e) {
+                throw new ConfigurationException("Cannot load field Class from " + field);
+            }
+            getInstanceManager().register(field, new LoggerInjector(this, name, type));
 
         }
 
@@ -84,6 +102,27 @@ public class LoggingHandler extends PrimitiveHandler {
 
     }
 
+    @Bind(aggregate = true, optional = true)
+    public synchronized void bindLoggingModule(LoggingModule module, ServiceReference reference) {
+        String pattern = (String) reference.getProperty("pattern");
+        Pattern compiled = Pattern.compile(pattern);
+        Matcher matcher = compiled.matcher(getBundleSymbolicName());
+        if (matcher.matches()) {
+            // The bundle of this instance can be configured with the module
+            modules.put(reference, module);
+        }
+
+    }
+
+    private String getBundleSymbolicName() {
+        return getInstanceManager().getContext().getBundle().getSymbolicName();
+    }
+
+    @Unbind
+    public synchronized void unbindLoggingModule(ServiceReference reference) {
+        modules.remove(reference);
+    }
+
     @Override
     public void stop() {
         // Nothing to do
@@ -92,5 +131,21 @@ public class LoggingHandler extends PrimitiveHandler {
     @Override
     public void start() {
         // Nothing to do
+    }
+
+    public LoggerReference findLogger(Class<?> type, String name) {
+        for (Map.Entry<ServiceReference, LoggingModule> entry : modules.entrySet()) {
+            Object logger = entry.getValue().getLogger(type, name);
+            if (logger != null) {
+                return new LoggerReference(entry.getKey(), logger);
+            }
+        }
+
+        this.setValidity(false);
+        // TODO What happen when the handler change its state within the user's Thread (aka while a normal execution ?)
+        // Does the processing stops immediately ?
+
+        // FIXME, Probably some NPE after that
+        return null;
     }
 }
