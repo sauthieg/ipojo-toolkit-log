@@ -1,15 +1,19 @@
 package org.ow2.ipojo.toolkit.log;
 
 import org.apache.felix.ipojo.ComponentInstance;
-import org.apache.felix.ipojo.Factory;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.Inject;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
+import org.osgi.framework.BundleContext;
+import org.ow2.chameleon.testing.helpers.IPOJOHelper;
+import org.ow2.chameleon.testing.helpers.OSGiHelper;
 import org.ow2.chameleon.testing.tinybundles.ipojo.IPOJOBuilder;
 import org.ow2.ipojo.toolkit.log.component.LoggerComponent;
-import org.ow2.ipojo.toolkit.log.utils.OSGiTestSupport;
 
 import java.io.File;
 
@@ -27,7 +31,7 @@ import static org.ops4j.pax.swissbox.tinybundles.core.TinyBundles.newBundle;
  * To change this template use File | Settings | File Templates.
  */
 @RunWith( JUnit4TestRunner.class )
-public class LoggingHandlerTestCase extends OSGiTestSupport {
+public class LoggingHandlerTestCase {
 
     @Configuration
     public static Option[] configure() {
@@ -35,6 +39,7 @@ public class LoggingHandlerTestCase extends OSGiTestSupport {
         return options(
                 mavenBundle("org.apache.felix", "org.apache.felix.ipojo").versionAsInProject(),
                 mavenBundle("org.ow2.ipojo.toolkit", "log-handler").versionAsInProject(),
+                mavenBundle("org.ow2.chameleon.testing", "osgi-helpers").versionAsInProject(),
                 felix(),
 
                 // Component bundle
@@ -45,13 +50,29 @@ public class LoggingHandlerTestCase extends OSGiTestSupport {
         );
     }
 
+    private OSGiHelper osgi;
+    private IPOJOHelper ipojo;
+
+    @Inject
+    private BundleContext context;
+
+    @Before
+    public void setup() {
+        osgi = new OSGiHelper(context);
+        ipojo = new IPOJOHelper(context);
+    }
+
+    @After
+    public void tearDown() {
+        osgi.dispose();
+        ipojo.dispose();
+    }
 
     @Test
     public void testLoggerInjection() throws Exception {
 
         // Get the factory and try to crete an instance.
-        Factory factory = getOsgiService(Factory.class, "(factory.name=" + LoggerComponent.class.getName() + ")", 200);
-        ComponentInstance instance = factory.createComponentInstance(null);
+        ComponentInstance instance = ipojo.createComponentInstance(LoggerComponent.class.getName());
 
         // Instance should be valid ...
         assertThat(instance.getState(), is(ComponentInstance.VALID));
