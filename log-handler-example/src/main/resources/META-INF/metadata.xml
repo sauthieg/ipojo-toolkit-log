@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipojo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="org.apache.felix.ipojo"
+       xsi:schemaLocation="org.apache.felix.ipojo http://felix.apache.org/ipojo/schemas/1.6.0/core.xsd" >
+
+  <!-- java.util.logging module support -->
+  <instance component="org.ow2.ipojo.toolkit.log.internal.jul.JavaUtilLoggingModule"
+            name="jul-system">
+    <property name="pattern" value=".*" />
+  </instance>
+
+</ipojo>
