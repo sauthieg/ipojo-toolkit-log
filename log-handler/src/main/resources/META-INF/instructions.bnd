@@ -1,0 +1,2 @@
+Export-Package org.ow2.ipojo.toolkit.log;version=${log-handler.version}, \
+               org.ow2.ipojo.toolkit.log.spi;version=${log-handler.version}
