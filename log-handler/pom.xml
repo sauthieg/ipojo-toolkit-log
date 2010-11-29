@@ -12,6 +12,11 @@
   <artifactId>log-handler</artifactId>
   <packaging>bundle</packaging>
 
+  <properties>
+    <!-- Exported package version -->
+    <log-handler.version>1.0</log-handler.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.felix</groupId>
