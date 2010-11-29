@@ -1,8 +1,6 @@
 package org.ow2.ipojo.toolkit.log.internal.log4j;
 
-import org.apache.felix.ipojo.annotations.Property;
-import org.apache.felix.ipojo.annotations.ServiceProperty;
-import org.apache.felix.ipojo.annotations.Validate;
+import org.apache.felix.ipojo.annotations.*;
 import org.apache.log4j.Hierarchy;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -22,6 +20,8 @@ import java.net.URL;
  * Time: 22:46
  * To change this template use File | Settings | File Templates.
  */
+@Component
+@Provides
 public class Log4JLoggingModule implements LoggingModule {
 
     @ServiceProperty(mandatory = true, value = ".*")
