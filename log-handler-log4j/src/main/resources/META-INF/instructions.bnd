@@ -1,0 +1,2 @@
+Import-Package org.apache.log4j.*;version=${log4j.version}, \
+               *

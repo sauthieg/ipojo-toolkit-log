@@ -10,12 +10,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>log-handler-log4j</artifactId>
+  <packaging>bundle</packaging>
+
+  <properties>
+    <log4j.version>1.2.14</log4j.version>
+  </properties>
 
   <dependencies>
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.14</version>
+      <version>${log4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.ow2.ipojo.toolkit</groupId>
