@@ -35,6 +35,7 @@ public class LoggingHandlerTestCase {
 
     @Configuration
     public static Option[] configure() {
+        // Empty file, the builder requires a file so ...
         File metadata = new File("src/test/resources/metadata.xml");
         return options(
                 mavenBundle("org.apache.felix", "org.apache.felix.ipojo").versionAsInProject(),
